@@ -16,6 +16,7 @@ import React from 'react';
 
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
+import HorizontalNonLinearStepper from '@/components/step';
 
 export default function Cadastro() {
   const steps = [
@@ -354,19 +355,10 @@ const previousStep=()=>{
   
           <div className="flex gap-4 items-center flex-col  w-500 h-100 col-start-1 row-start-6 col-span-3">
 
-<StepperControl></StepperControl>
+
 
     
-          <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={1} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-    </Box>
-
+<HorizontalNonLinearStepper></HorizontalNonLinearStepper>
 
 
 
