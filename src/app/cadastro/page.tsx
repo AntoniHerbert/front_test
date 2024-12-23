@@ -1,17 +1,45 @@
 "use client";
 
 
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Box, Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-import Stepper from "../../components/Stepper"
+
 
 import StepperControl from "../../components/StepperControl"
 
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
+import React from 'react';
 
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 export default function Cadastro() {
+  const steps = [
+    '1. Dados da empresa',
+    '2. Segmentos ',
+    '3. Categorias',
+  ];
+
+const [activeStep, setActiveStep] = React.useState(1)
+
+const nextStep= () => {
+  if (activeStep < 4){
+    setActiveStep((currentStep) => currentStep + 1)
+}
+  }
+  
+
+const previousStep=()=>{
+  if (activeStep > 0){
+      setActiveStep((currentStep) => currentStep - 1)
+
+  }
+}
+
     return (
       <div className=" items-center justify-items-center p-8 pb-20 gap-16 font-[family-name:var(--font-geist-sans)]">
         
@@ -325,10 +353,19 @@ export default function Cadastro() {
       />
   
           <div className="flex gap-4 items-center flex-col  w-500 h-100 col-start-1 row-start-6 col-span-3">
-                        <StepperControl></StepperControl>
 
-            <Stepper></Stepper>
+<StepperControl></StepperControl>
 
+    
+          <Box sx={{ width: '100%' }}>
+      <Stepper activeStep={1} alternativeLabel>
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+    </Box>
 
 
 
