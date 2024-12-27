@@ -4,7 +4,9 @@
 import { Autocomplete, Box, Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
+import DadosEmpresa from "../../components/Cadastro"
 
+import StepContext from '@mui/material/Step';
 
 import StepperControl from "../../components/StepperControl"
 
@@ -12,354 +14,88 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import HorizontalNonLinearStepper from '@/components/step';
+import HorizontalNonLinearStepper from '@/components/Stepper';
+import Categorias from '@/components/Categorias';
+import Segmentos from '@/components/Segmentos';
+import { Segment } from '@mui/icons-material';
+import StepperControls from '../../components/StepperControl';
+import { CategoriasProvider } from '@/contexts/CategoriasContext';
+import { SegmentosProvider } from '@/contexts/SegmentosContext';
+import { DadosEmpresaProvider } from '@/contexts/DadosEmpresaContext';
+import { CidadesProvider } from '@/contexts/CidadesContext';
 
-export default function Cadastro() {
+
+const Cadastro: React.FC = () => {
   const steps = [
     '1. Dados da empresa',
     '2. Segmentos ',
     '3. Categorias',
   ];
 
-const [activeStep, setActiveStep] = React.useState(1)
+const [activeStep, setActiveStep] = useState(0);
+const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
 
-const nextStep= () => {
-  if (activeStep < 4){
-    setActiveStep((currentStep) => currentStep + 1)
-}
-  }
+const isLastStep = activeStep === steps.length - 1;
+
+const handleNext= () => {
+  const newActiveStep =
+  isLastStep && !allStepsCompleted()
+  ? steps.findIndex((_, i) => !(i in completed))
+  : activeStep + 1;
+setActiveStep(newActiveStep);
+  };
   
 
-const previousStep=()=>{
-  if (activeStep > 0){
-      setActiveStep((currentStep) => currentStep - 1)
+const handleBack=()=>{
+      setActiveStep((prevStep) => prevStep - 1)
 
-  }
-}
+  };
+
+  const handleStepChange = (step: number) => {
+    setActiveStep(step);
+  };
+
+  const allStepsCompleted = () => {
+    return Object.keys(completed).length === steps.length;
+  };
 
     return (
       <div className=" items-center justify-items-center p-8 pb-20 gap-16 font-[family-name:var(--font-geist-sans)]">
         
-        <main className="grid grif-cols-3 gap-8 bg-other w-1285 h-921">
-          <h1 className='text-foreground items text-center text-4xl col-start-1 row-start-1 col-span-3' >Cadastro da Empresa</h1>
-        <TextField
-        label="CNPJ"
-        placeholder="Ex: 00000000000"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-1 row-start-2'
-      />
-
-        <TextField
-        label="RAZÃO SOCIAL"
-        placeholder="Ex: Comércio de Alimentos Ltda"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-2 row-start-2'
-
-      />
-
-<TextField
-        label="NOME"
-        placeholder="Ex: Minha Empresa"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-3 row-start-2'
-
-      />
-
-        <TextField 
-        label="CEP"
-        placeholder="Ex: 00000000"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-1 row-start-3'
-
-      />
-
-
-<Autocomplete
-        options={['CE', 'AM', 'PE']}
-        renderInput={(params) => (
-          <TextField {...params} label="ESTADO" variant="outlined" fullWidth />
-        )}
-        freeSolo
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-
-   
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-  
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Garantir visibilidade do placeholder
-          },
-        }}
-        className='col-start-2 row-start-3'
-
-      />
-
-
-<Autocomplete
-        options={['Fortaleza', 'Maranguape', 'Maracanaú']}
-        renderInput={(params) => (
-          <TextField {...params} label="CIDADE" variant="outlined" fullWidth />
-        )}
-        freeSolo
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-
-   
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-  
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Garantir visibilidade do placeholder
-          },
-        }}
-                className='col-start-3 row-start-3'
-      />
-
-
-
-
-
-
-
-
-
-
-
-<TextField
-        label="BAIRRO"
-        placeholder="Ex: Bairro Alto"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-1 row-start-4'
-
-      />
-
-<TextField 
-        label="RUA"
-        placeholder="Ex: Rua Baixa"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-2 row-start-4'
-
-      />
-
-<TextField 
-        label="NUMERO"
-        placeholder="987"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-3 row-start-4'
-
-      />
-
-<TextField 
-        label="EMAIL PARA CONTATO"
-        placeholder="Ex: meuemail@email.com"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-1 row-start-5'
-
-      />
-
-<TextField
-        label="TELEFONE"
-        placeholder="Ex: 0000000000"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Para garantir que o placeholder não fique transparente
-          },
-        }}
-        className='col-start-2 row-start-5'
-
-      />
-
-<Autocomplete
-        options={['Construção', 'Mercado']}
-        renderInput={(params) => (
-          <TextField {...params} label="Área da empresa" variant="outlined" fullWidth placeholder='Ex: Construção'/>
-        )}
-        freeSolo
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#ffffff', // Borda
-            },
-
-   
-          },
-          '& .MuiInputLabel-root': {
-            color: '#ffffff', // Cor da label
-  
-          },
-          '& .MuiInputBase-input::placeholder': {
-            color: '#ffffff', // Cor do placeholder
-            opacity: 1, // Garantir visibilidade do placeholder
-          },
-        }}
-        className='col-start-3 row-start-5'
-
-      />
-  
+        <main className=" grid grid-cols-1 justify-items-center bg-other w-1285 h-921">
+        <DadosEmpresaProvider>
+      <SegmentosProvider>
+        <CategoriasProvider>
+          <CidadesProvider>
+        <div style={{ marginTop: '20px' }}>
+        {activeStep === 0 && <DadosEmpresa></DadosEmpresa>}
+        {activeStep === 1 && <Segmentos></Segmentos>}
+        {activeStep === 2 && <Categorias></Categorias>}
+      </div>
+      </CidadesProvider>
+      </CategoriasProvider>
+      </SegmentosProvider>
+      </DadosEmpresaProvider>
           <div className="flex gap-4 items-center flex-col  w-500 h-100 col-start-1 row-start-6 col-span-3">
 
-
+          <StepperControls
+        activeStep={activeStep}
+        isLastStep={isLastStep}
+        onNext={handleNext}
+        onBack={handleBack}
+      />
 
     
-<HorizontalNonLinearStepper></HorizontalNonLinearStepper>
-
+          <HorizontalNonLinearStepper
+        steps={steps}
+        activeStep={activeStep}
+        completed={completed}
+        onStepChange={handleStepChange}
+      />
 
 
 
@@ -407,4 +143,6 @@ const previousStep=()=>{
         
       </div>
     );
-  }
+  };
+
+  export default Cadastro;

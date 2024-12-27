@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Stepper.tsx", "src/app/cadastro/page.jsx", "src/components/steps/Cadastro.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Stepper.tsx", "src/app/cadastro/page.jsx", "src/components/steps/Cadastro.tsx"],
   "exclude": ["node_modules"]
 }

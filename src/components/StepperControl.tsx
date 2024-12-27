@@ -1,15 +1,44 @@
-import React from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
+import React from 'react';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
-const StepperControl = ( ) => {
-    return <div className="container flex justify-around mt-4 mb-8">
+interface StepperControlsProps {
+  activeStep: number;
+  isLastStep: boolean;
+  onNext: () => void;
+  onBack: () => void;
+}
 
-        <button className=" text-slate-400 flex flex-row items-center uppercase py-2 px-4 rounded-xl font-semibold cursor-pointer hover:bg-slate-700 hover: text-white transition duration-200 ease-in-out"><IoIosArrowBack />Anterior</button>
-
-        <button className=" text-slate-400 flex flex-row items-center uppercase py-2 px-4 rounded-xl font-semibold cursor-pointer hover:bg-slate-700 hover: text-white transition duration-200 ease-in-out">Próximo<IoIosArrowForward /></button>
-
-    </div>;
+const StepperControls: React.FC<StepperControlsProps> = ({
+  activeStep,
+  isLastStep,
+  onNext,
+  onBack,
+}) => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, gap: 35 }} >
+      <Button
+        disabled={activeStep === 0}
+        onClick={onBack}
+        sx={{ mr: 1 }}
+        className="text-slate-400 flex flex-row items-center uppercase py-2 px-4 rounded-xl font-semibold cursor-pointer hover:bg-slate-700 hover:text-white transition duration-200 ease-in-out"
+      >
+        <IoIosArrowBack />
+        Anterior
+      </Button>
+      <Box sx={{ flex: '1 1 auto' }} />
+      <Button
+        onClick={onNext}
+        disabled={isLastStep}
+        sx={{ mr: 1 }}
+        className="text-slate-400 flex flex-row items-center uppercase py-2 px-4 rounded-xl font-semibold cursor-pointer hover:bg-slate-700 hover:text-white transition duration-200 ease-in-out"
+      >
+        Próximo
+        <IoIosArrowForward />
+      </Button>
+    </Box>
+  );
 };
 
-export default StepperControl;
+export default StepperControls;
