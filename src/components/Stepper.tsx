@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
-import { Button } from '@mui/material';
+import { Button, StepLabel } from '@mui/material';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 interface StepperProps {
@@ -38,10 +38,11 @@ const HorizontalNonLinearStepper: React.FC<StepperProps> = ({
                 '& .MuiStepLabel-root': {
                   borderTop: '2px solid',
                   borderColor: activeStep === index || completed[index] ? 'green' : 'white',
+                  color: activeStep === index || completed[index] ? 'green' : 'white',
                 },
               }}
             >
-              {label}
+             {label}
             </StepButton>
           </Step>
         ))}
