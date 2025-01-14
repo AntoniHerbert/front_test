@@ -24,26 +24,24 @@ const HorizontalNonLinearStepper: React.FC<StepperProps> = ({
       <Stepper nonLinear activeStep={activeStep} alternativeLabel connector={null} className='pt-8'>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton
-              onClick={() => onStepChange(index)}
-              sx={{
-                '& .MuiStepIcon-root': { display: 'none' },
-                color: activeStep === index || completed[index] ? 'green' : 'white',
-                '& .MuiStepLabel-label': {
-                  color: activeStep === index || completed[index] ? 'green' : 'white',
-                },
-                '& .MuiStepLabel-alternativeLabel': {
-                  color: activeStep === index || completed[index] ? 'green' : 'white',
-                },
-                '& .MuiStepLabel-root': {
-                  borderTop: '2px solid',
-                  borderColor: activeStep === index || completed[index] ? 'green' : 'white',
-                  color: activeStep === index || completed[index] ? 'green' : 'white',
-                },
-              }}
+            <StepLabel
+sx={{
+    '& .MuiStepIcon-root': { display: 'none' }, // Remove os ícones dos passos
+    '& .MuiStepLabel-label': {
+      color: activeStep === index || completed[index] ? 'green' : 'white', // Cor do texto da label
+    },
+    '& .MuiStepLabel-label.Mui-active': {
+      color: 'green', // Garante que a label fique verde quando ativa
+    },
+    '& .MuiStepLabel-label.Mui-completed': {
+      color: 'green', // Garante que a label fique verde quando completa
+    },
+    borderTop: '2px solid', // Adiciona a borda superior
+    borderColor: activeStep === index || completed[index] ? 'green' : 'white', // Cor da borda
+  }}
             >
              {label}
-            </StepButton>
+            </StepLabel>
           </Step>
         ))}
       </Stepper>

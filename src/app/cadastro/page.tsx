@@ -23,13 +23,18 @@ import Categorias from '@/components/Categorias';
 import Segmentos from '@/components/Segmentos';
 import { Segment } from '@mui/icons-material';
 import StepperControls from '../../components/StepperControl';
-import { CategoriasProvider } from '@/contexts/CategoriasContext';
-import { SegmentosProvider } from '@/contexts/SegmentosContext';
-import { DadosEmpresaProvider } from '@/contexts/DadosEmpresaContext';
+import { CategoriasProvider, useCategorias } from '@/contexts/CategoriasContext';
+import { SegmentosProvider, useSegmentos } from '@/contexts/SegmentosContext';
+import { DadosEmpresaProvider, useDadosEmpresa } from '@/contexts/DadosEmpresaContext';
 import { CidadesProvider } from '@/contexts/CidadesContext';
 
 
 const Cadastro: React.FC = () => {
+const {validarDadosEmpresa, camposComErro} = useDadosEmpresa();
+const {validarSegmentos} = useSegmentos();
+const {validarCategorias} = useCategorias();
+
+
   const steps = [
     '1. Dados da empresa',
     '2. Segmentos ',
@@ -38,17 +43,49 @@ const Cadastro: React.FC = () => {
 
 const [activeStep, setActiveStep] = useState(0);
 const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
+const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+
 
 const isLastStep = activeStep === steps.length - 1;
 
-const handleNext= () => {
-  const newActiveStep =
-  isLastStep && !allStepsCompleted()
-  ? steps.findIndex((_, i) => !(i in completed))
-  : activeStep + 1;
-setActiveStep(newActiveStep);
-  };
+const [refresh, setRefresh] = useState(false);
+
+
+ 
+const handleNext = () => {
+  // Step 1: Validação de Dados da Empresa
+  if (activeStep === 0) {
+
+const camposInvalidos =   validarDadosEmpresa(); // Pegando os campos com erro
+
+ 
+    if (camposInvalidos.length > 0) {
   
+      return;  // Não avança para o próximo passo
+    }
+  }
+
+  // Step 2: Validação de Segmentos
+  if (activeStep === 1) {
+    if (!validarSegmentos()) {
+      alert('Por favor, selecione pelo menos um segmento.');
+      return;
+    }
+  }
+
+  // Step 3: Validação de Categorias
+  if (activeStep === 2) {
+    if (!validarCategorias()) {
+      alert('Por favor, selecione pelo menos uma categoria.');
+      return;
+    }
+  }
+
+  // Avança para o próximo passo
+  setActiveStep((prevStep) => prevStep + 1);
+};
+
 
 const handleBack=()=>{
       setActiveStep((prevStep) => prevStep - 1)
@@ -67,9 +104,7 @@ const handleBack=()=>{
       <div className=" items-center justify-items-center p-8 pb-20 gap-16 font-[family-name:var(--font-geist-sans)]">
         
         <main className=" grid grid-cols-1 justify-items-center bg-other w-1285 h-921">
-        <DadosEmpresaProvider>
-      <SegmentosProvider>
-        <CategoriasProvider>
+      
           <CidadesProvider>
         <div style={{ marginTop: '20px' }}>
         {activeStep === 0 && <DadosEmpresa></DadosEmpresa>}
@@ -77,9 +112,6 @@ const handleBack=()=>{
         {activeStep === 2 && <Categorias></Categorias>}
       </div>
       </CidadesProvider>
-      </CategoriasProvider>
-      </SegmentosProvider>
-      </DadosEmpresaProvider>
           <div className="flex gap-4 items-center flex-col  w-500 h-100 col-start-1 row-start-6 col-span-3">
 
           <StepperControls

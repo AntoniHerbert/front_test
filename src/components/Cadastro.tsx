@@ -5,7 +5,9 @@ import { useCidades } from '@/contexts/CidadesContext';
 
 const DadosEmpresa: React.FC = () => {
 
-  const {dadosEmpresa, atualizarDadosEmpresa} = useDadosEmpresa();
+  const {dadosEmpresa, camposComErro, atualizarDadosEmpresa} = useDadosEmpresa();
+
+
   const {carregarCidades} = useCidades();
 
   const [cidades, setCidades] = useState([]);
@@ -128,6 +130,7 @@ const DadosEmpresa: React.FC = () => {
               </Typography>
 
       <TextField
+      required
         label="CNPJ"
         placeholder="Ex: 00000000000"
         variant="outlined"
@@ -137,9 +140,12 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-1 row-start-2"
         value={dadosEmpresa.cnpj || ''}
         onChange={(e) => atualizarDadosEmpresa('cnpj', e.target.value)}
+error={camposComErro.includes('cnpj')}
+        helpertext={camposComErro.includes('cnpj') ? 'Requerido' : ''}
       />
 
       <TextField
+      required
         label="RAZÃO SOCIAL"
         placeholder="Ex: Comércio de Alimentos Ltda"
         variant="outlined"
@@ -149,9 +155,15 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-2 row-start-2"
         value={dadosEmpresa.razaoSocial || ''}
         onChange={(e) => atualizarDadosEmpresa('razaoSocial', e.target.value)}
+error={
+  camposComErro.includes('razaoSocial')
+}
+helpertext={camposComErro.includes('razaoSocial') ? 'Requerido' : ''}
+
       />
 
       <TextField
+      required
         label="NOME"
         placeholder="Ex: Minha Empresa"
         variant="outlined"
@@ -161,9 +173,13 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-3 row-start-2"
         value={dadosEmpresa.nome || ''}
         onChange={(e) => atualizarDadosEmpresa('nome', e.target.value)}
+error={camposComErro.includes('nome')}
+helpertext={camposComErro.includes('nome') ? 'Requerido' : ''}
+
       />
 
       <TextField
+      required
         label="CEP"
         placeholder="Ex: 00000000"
         variant="outlined"
@@ -173,6 +189,9 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-1 row-start-3"
         value={dadosEmpresa.cep || ''}
         onChange={(e) => atualizarDadosEmpresa('cep', e.target.value)}
+error={camposComErro.includes('cep')}
+helpertext={camposComErro.includes('cep') ? 'Requerido' : ''}
+
       />
 
       <Autocomplete
@@ -182,12 +201,16 @@ const DadosEmpresa: React.FC = () => {
           atualizarDadosEmpresa('estado', newValue || '') // Atualiza a UF selecionada
         } 
         renderInput={(params) => (
-          <TextField {...params} label="ESTADO" variant="outlined" fullWidth />
+          <TextField {...params} required label="ESTADO"         sx={textFieldStyles} variant="outlined" fullWidth placeholder="Estado" error={camposComErro.includes('estado')}
+helpertext={camposComErro.includes('estado') ? 'Requerido' : ''}
+/>
         )}
         freeSolo
         sx={autoCompleteStyles}
         className="col-start-2 row-start-3"
         fullWidth
+
+
       />
  
       <Autocomplete
@@ -195,16 +218,20 @@ const DadosEmpresa: React.FC = () => {
         value={dadosEmpresa.cidade || ''}
         onChange={(event, newValue) => atualizarDadosEmpresa('cidade', newValue || '')}
         renderInput={(params) => (
-          <TextField {...params} label="CIDADE" variant="outlined" fullWidth />
+          <TextField {...params} required label="CIDADE"         sx={textFieldStyles} variant="outlined" fullWidth error={camposComErro.includes('cidade')}
+helpertext={camposComErro.includes('cidades') ? 'Requerido' : ''}
+/>
         )}
         disabled={!dadosEmpresa.estado}
         freeSolo
         sx={autoCompleteStyles}
         className="col-start-3 row-start-3"
         fullWidth
+
       />
 
       <TextField
+      required
         label="BAIRRO"
         placeholder="Ex: Bairro Alto"
         variant="outlined"
@@ -214,9 +241,14 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-1 row-start-4"
         value={dadosEmpresa.bairro || ''}
         onChange={(e) => atualizarDadosEmpresa('bairro', e.target.value)}
+error={camposComErro.includes('bairro')}
+helpertext={camposComErro.includes('bairro') ? 'Requerido' : ''}
+
+
       />
 
       <TextField
+      required
         label="RUA"
         placeholder="Ex: Rua Baixa"
         variant="outlined"
@@ -226,9 +258,15 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-2 row-start-4"
         value={dadosEmpresa.rua || ''}
         onChange={(e) => atualizarDadosEmpresa('rua', e.target.value)}
+error={camposComErro.includes('rua')}
+helpertext={camposComErro.includes('rua') ? 'Requerido' : ''}
+
+
+
       />
 
       <TextField
+      required
         label="NÚMERO"
         placeholder="987"
         variant="outlined"
@@ -238,9 +276,13 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-3 row-start-4"
         value={dadosEmpresa.numero || ''}
         onChange={(e) => atualizarDadosEmpresa('numero', e.target.value)}
-      />
+      error={camposComErro.includes('numero')}
+helpertext={camposComErro.includes('numero') ? 'Requerido' : ''}
+
+        />
 
       <TextField
+      required
         label="EMAIL PARA CONTATO"
         placeholder="Ex: meuemail@email.com"
         variant="outlined"
@@ -250,9 +292,14 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-1 row-start-5"
         value={dadosEmpresa.email || ''}
         onChange={(e) => atualizarDadosEmpresa('email', e.target.value)}
-      />
+     error={camposComErro.includes('email')}
+helpertext={camposComErro.includes('email') ? 'Requerido' : ''}
+
+
+        />
 
       <TextField
+      required
         label="TELEFONE"
         placeholder="Ex: 0000000000"
         variant="outlined"
@@ -262,26 +309,33 @@ const DadosEmpresa: React.FC = () => {
         className="col-start-2 row-start-5"
         value={dadosEmpresa.telefone || ''}
         onChange={(e) => atualizarDadosEmpresa('telefone', e.target.value)}
-      />
+      error={camposComErro.includes('telefone')}
+helpertext={camposComErro.includes('telefone') ? 'Requerido' : ''}
+
+        />
 
       <Autocomplete
+      
         options={areas}
         value={dadosEmpresa.area || ''}
         onChange={(event, newValue) => atualizarDadosEmpresa('area', newValue || '')}
         renderInput={(params) => (
           <TextField
             {...params}
+            required
+        sx={textFieldStyles}
             label="Área da empresa"
             variant="outlined"
             fullWidth
             placeholder="Ex: Construção"
-          />
+ error={camposComErro.includes('area')}
+helpertext={camposComErro.includes('area') ? 'Requerido' : ''}         />
         )}
         freeSolo
-        sx={autoCompleteStyles}
         className="col-start-3 row-start-5"
         fullWidth
     
+
       />
     </FormControl>
   );

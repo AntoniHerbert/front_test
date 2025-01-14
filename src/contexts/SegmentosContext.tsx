@@ -1,9 +1,10 @@
+"use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Definição dos tipos
 type SegmentosContextType = {
   selectedSegments: string[];
   toggleSegment: (segment: string) => void;
+  validarSegmentos: () => boolean; // Nova função para validação
 };
 
 const SegmentosContext = createContext<SegmentosContextType | undefined>(undefined);
@@ -23,8 +24,10 @@ export const SegmentosProvider: React.FC<SegmentosProviderProps> = ({ children }
     );
   };
 
+  const validarSegmentos = () => selectedSegments.length > 0;
+
   return (
-    <SegmentosContext.Provider value={{ selectedSegments, toggleSegment }}>
+    <SegmentosContext.Provider value={{ selectedSegments, toggleSegment, validarSegmentos }}>
       {children}
     </SegmentosContext.Provider>
   );
@@ -37,3 +40,4 @@ export const useSegmentos = (): SegmentosContextType => {
   }
   return context;
 };
+

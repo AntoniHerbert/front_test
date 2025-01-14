@@ -1,9 +1,10 @@
+"use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Definição dos tipos
 type CategoriasContextType = {
   selectedCategories: string[];
   toggleCategory: (category: string) => void;
+  validarCategorias: () => boolean; // Nova função para validação
 };
 
 const CategoriasContext = createContext<CategoriasContextType | undefined>(undefined);
@@ -23,8 +24,10 @@ export const CategoriasProvider: React.FC<CategoriasProviderProps> = ({ children
     );
   };
 
+  const validarCategorias = () => selectedCategories.length > 0;
+
   return (
-    <CategoriasContext.Provider value={{ selectedCategories, toggleCategory }}>
+    <CategoriasContext.Provider value={{ selectedCategories, toggleCategory, validarCategorias }}>
       {children}
     </CategoriasContext.Provider>
   );
@@ -37,3 +40,4 @@ export const useCategorias = (): CategoriasContextType => {
   }
   return context;
 };
+
