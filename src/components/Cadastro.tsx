@@ -65,60 +65,78 @@ const DadosEmpresa: React.FC = () => {
 
 
 
-  const textFieldStyles = {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#ffffff', // Borda
-      },
+const textFieldStyles = {
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#ffffff', // Borda padrão
     },
-    '& .MuiInputLabel-root': {
-      color: '#ffffff', // Cor da label
+    '&.Mui-focused fieldset': {
+      borderColor: '#ffffff', // Borda ao focar
     },
-    '& .MuiInputBase-input::placeholder': {
-      color: '#ffffff', // Cor do placeholder
-      opacity: 1, // Garantir visibilidade do placeholder
+    '&.Mui-error fieldset': {
+      borderColor: '#ff0000', // Borda em caso de erro
     },
-    '& .MuiInputBase-input': {
-          color: '#ffffff',
-        },
-        '& .MuiInput-underline:before': {
-          borderBottomColor: '#ffffff',
-        },
-        '& .MuiInput-underline:after': {
-          borderBottomColor: '#ffffff',
-        },
-        '& .MuiInputBase-root': {
-          minHeight: '80px', // Definindo altura mínima do input
-        },
-  };
+  },
+  '& .MuiInputLabel-root': {
+    color: '#ffffff', // Cor padrão da label
+    '&.Mui-focused': {
+      color: '#ffffff', // Cor da label ao focar
+    },
+    '&.Mui-error': {
+      color: '#ff0000', // Cor da label em caso de erro
+    },
+  },
+  '& .MuiInputBase-input::placeholder': {
+    color: '#ffffff', // Cor do placeholder
+    opacity: 1, // Garantir visibilidade do placeholder
+  },
+  '& .MuiInputBase-input': {
+    color: '#ffffff', // Cor do texto
+  },
+  '& .MuiInput-underline:before': {
+    borderBottomColor: '#ffffff', // Linha inferior padrão
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: '#ffffff', // Linha inferior ao focar
+  },
+  '& .MuiInputBase-root': {
+    minHeight: '80px', // Definindo altura mínima do input
+  },
+};
 
-  const autoCompleteStyles = {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#ffffff', // Borda
-      },
+const autoCompleteStyles = {
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#ffffff', // Borda padrão
     },
-    '& .MuiInputLabel-root': {
-      color: '#ffffff', // Cor da label
+    '&.Mui-focused fieldset': {
+      borderColor: '#ffffff', // Borda ao focar
     },
-    '& .MuiInputBase-input::placeholder': {
-      color: '#ffffff', // Cor do placeholder
-      opacity: 1, // Garantir visibilidade do placeholder
+    '&.Mui-error fieldset': {
+      borderColor: '#ff0000', // Borda em caso de erro
     },
-    '& .MuiInputBase-input': {
-      color: '#ffffff', // Cor do texto dentro do input
+  },
+  '& .MuiInputBase-input': {
+    color: '#ffffff', // Cor do texto dentro do input
+  },
+  '& .MuiInputBase-root': {
+    minHeight: '80px', // Altura mínima do input
+    padding: '0',
+  },
+  '& .MuiAutocomplete-listbox': {
+    padding: 0, // Remover padding da lista de opções
+    marginTop: 0, // Remover margem
+  },
+  '& .MuiInputLabel-root': {
+    color: '#ffffff', // Cor da label padrão
+    '&.Mui-focused': {
+      color: '#ffffff', // Cor da label ao focar
     },
-    '& .MuiInputBase-root': {
-      minHeight: '80px',
-      padding: '0', // Definindo altura mínima do input
+    '&.Mui-error': {
+      color: '#ff0000', // Cor da label em caso de erro
     },
-    '& .MuiAutocomplete-listbox': {
-      padding: 0, // Remover padding da lista de opções
-      marginTop: 0, // Remover margem
-    },
-    
-  };
-
+  },
+};
 
 
   return (
