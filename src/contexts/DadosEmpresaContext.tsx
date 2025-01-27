@@ -22,6 +22,8 @@ interface DadosEmpresaContextType {
   camposComErro: string[];
   atualizarDadosEmpresa: (campo: keyof DadosEmpresa, valor: string) => void;
   validarDadosEmpresa: () => void; // Não precisa mais retornar uma lista de erros
+  camposDesabilitados: boolean;
+setCamposDesabilitados: (desabilitar: boolean) => void;
 }
 
 const DadosEmpresaContext = createContext<DadosEmpresaContextType | undefined>(undefined);
@@ -47,7 +49,7 @@ export const DadosEmpresaProvider: React.FC<DadosEmpresaProviderProps> = ({ chil
   });
 
   const [camposComErro, setCamposComErro] = useState<string[]>([]);
-
+const [camposDesabilitados, setCamposDesabilitados] = useState<boolean>(false);
 
 
   const atualizarDadosEmpresa = (campo: keyof DadosEmpresa, valor: string) => {
@@ -74,7 +76,7 @@ const validarDadosEmpresa = () => {
   return camposInvalidos;
 };
   return (
-    <DadosEmpresaContext.Provider value={{ dadosEmpresa, camposComErro, atualizarDadosEmpresa, validarDadosEmpresa }}>
+    <DadosEmpresaContext.Provider value={{ dadosEmpresa, camposComErro, atualizarDadosEmpresa, validarDadosEmpresa, camposDesabilitados, setCamposDesabilitados, }}>
       {children}
     </DadosEmpresaContext.Provider>
   );

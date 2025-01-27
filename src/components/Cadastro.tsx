@@ -1,28 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Autocomplete, FormControl, Typography } from '@mui/material';
+import { TextField, Autocomplete, FormControl, Typography, CircularProgress } from '@mui/material';
 import { useDadosEmpresa } from '@/contexts/DadosEmpresaContext';
 import { useCidades } from '@/contexts/CidadesContext';
+import axios from 'axios';
 
 const DadosEmpresa: React.FC = () => {
 
-  const {dadosEmpresa, camposComErro, atualizarDadosEmpresa} = useDadosEmpresa();
+  const {dadosEmpresa, camposComErro, atualizarDadosEmpresa, camposDesabilitados, setCamposDesabilitados} = useDadosEmpresa();
 
 
   const {carregarCidades} = useCidades();
 
   const [cidades, setCidades] = useState([]);
+  const [loadingCep, setLoadingCep] = useState(false);
 
   const areas = [
-    'Tecnologia da Informação',
-    'Saúde',
-    'Educação',
-    'Comércio',
-    'Indústria',
-    'Serviços',
-    'Construção Civil',
-    'Agropecuária',
-    'Transporte e Logística',
-    'Turismo e Hospitalidade',
+    'Restaurante',
   ];
 
   const estados = [
@@ -63,7 +56,35 @@ const DadosEmpresa: React.FC = () => {
     }
   }, [dadosEmpresa.estado, carregarCidades]);
 
+  const buscarEnderecoPorCep = async (cep: string) => {
+    if (!cep || cep.length < 8) return; // Apenas busca se o CEP for válido
 
+    setLoadingCep(true); // Ativa o estado de loading
+    try {
+      const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+      if (response.data && !response.data.erro) {
+        const { logradouro, bairro, localidade, uf } = response.data;
+
+        // Atualiza os campos no contexto
+        atualizarDadosEmpresa('rua', logradouro || '');
+        atualizarDadosEmpresa('bairro', bairro || '');
+        atualizarDadosEmpresa('cidade', localidade || '');
+        atualizarDadosEmpresa('estado', uf || '');
+
+        // Atualiza o estado de desabilitação no contexto
+        setCamposDesabilitados(true);
+      } else {
+        alert('O cep informado não foi encontrado');
+        setCamposDesabilitados(false); // Permite que o usuário preencha os campos manualmente
+      }
+    } catch (error) {
+      console.error('Erro ao buscar o CEP:', error);
+      alert('O cep informado não foi encontrado');
+      setCamposDesabilitados(false); // Permite que o usuário preencha os campos manualmente
+    } finally {
+      setLoadingCep(false); // Desativa o estado de loading
+    }
+  };
 
 const textFieldStyles = {
   '& .MuiOutlinedInput-root': {
@@ -140,10 +161,18 @@ const autoCompleteStyles = {
 
 
   return (
-    
+ <>
 
-    <FormControl className="grid grid-cols-3 gap-4 items-center">
- <Typography variant="h1" color="#ffffff" className="text-foreground items text-center text-4xl col-start-1 row-start-1 col-span-3">
+      {loadingCep && (
+        <div className="absolute inset-0 bg-gray-800 bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <CircularProgress size={60} />
+        </div>
+      )}
+    <FormControl
+      className={`grid grid-cols-3 gap-4 items-center transition-opacity duration-300 ${
+        loadingCep ? 'blur-sm' : ''
+      }`}>
+      <Typography variant="h1" color="#ffffff" className="text-foreground items text-center text-4xl col-start-1 row-start-1 col-span-3">
                Cadastro da Empresa
               </Typography>
 
@@ -206,7 +235,10 @@ helpertext={camposComErro.includes('nome') ? 'Requerido' : ''}
         sx={textFieldStyles}
         className="col-start-1 row-start-3"
         value={dadosEmpresa.cep || ''}
-        onChange={(e) => atualizarDadosEmpresa('cep', e.target.value)}
+        onChange={(e) => {atualizarDadosEmpresa('cep', e.target.value); 
+        setCamposDesabilitados(false);
+        }}
+onBlur={(e) => buscarEnderecoPorCep(e.target.value)}
 error={camposComErro.includes('cep')}
 helpertext={camposComErro.includes('cep') ? 'Requerido' : ''}
 
@@ -221,6 +253,7 @@ helpertext={camposComErro.includes('cep') ? 'Requerido' : ''}
         renderInput={(params) => (
           <TextField {...params} required label="ESTADO"         sx={textFieldStyles} variant="outlined" fullWidth placeholder="Estado" error={camposComErro.includes('estado')}
 helpertext={camposComErro.includes('estado') ? 'Requerido' : ''}
+disabled={camposDesabilitados}
 />
         )}
         freeSolo
@@ -240,7 +273,7 @@ helpertext={camposComErro.includes('estado') ? 'Requerido' : ''}
 helpertext={camposComErro.includes('cidades') ? 'Requerido' : ''}
 />
         )}
-        disabled={!dadosEmpresa.estado}
+        disabled={!dadosEmpresa.estado || camposDesabilitados}
         freeSolo
         sx={autoCompleteStyles}
         className="col-start-3 row-start-3"
@@ -261,7 +294,7 @@ helpertext={camposComErro.includes('cidades') ? 'Requerido' : ''}
         onChange={(e) => atualizarDadosEmpresa('bairro', e.target.value)}
 error={camposComErro.includes('bairro')}
 helpertext={camposComErro.includes('bairro') ? 'Requerido' : ''}
-
+disabled={camposDesabilitados}
 
       />
 
@@ -278,7 +311,7 @@ helpertext={camposComErro.includes('bairro') ? 'Requerido' : ''}
         onChange={(e) => atualizarDadosEmpresa('rua', e.target.value)}
 error={camposComErro.includes('rua')}
 helpertext={camposComErro.includes('rua') ? 'Requerido' : ''}
-
+disabled={camposDesabilitados}
 
 
       />
@@ -356,6 +389,8 @@ helpertext={camposComErro.includes('area') ? 'Requerido' : ''}         />
 
       />
     </FormControl>
+</>
+
   );
 };
 
