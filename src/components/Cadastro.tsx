@@ -352,7 +352,7 @@ helpertext={camposComErro.includes('email') ? 'Requerido' : ''}
       <TextField
       required
         label="TELEFONE"
-        placeholder="Ex: 0000000000"
+        placeholder="Ex:00000000000"
         variant="outlined"
         fullWidth
         margin="normal"
