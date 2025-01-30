@@ -36,15 +36,17 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
   useEffect(() => {
     localStorage.setItem('dadosEmpresa', JSON.stringify(dadosEmpresa));
   }, [dadosEmpresa]);
-{/*
-  useEffect(() => {
-    if (dadosEmpresa.estado) {
-      carregarCidades(dadosEmpresa.estado).then(setCidades);
-    } else {
-      setCidades([]);
-    }
-  }, [dadosEmpresa.estado]);
-*/}
+
+  
+useEffect(() => {
+  if (dadosEmpresa.estado) {
+    carregarCidades(dadosEmpresa.estado).then(setCidades);
+  } else {
+    setCidades([]);
+  }
+}, [dadosEmpresa.estado]);
+
+
   const atualizarDadosEmpresa = (campo, valor) => {
     setDadosEmpresa(prev => ({ ...prev, [campo]: valor }));
   };
@@ -73,7 +75,30 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
       setLoadingCep(false);
     }
   };
+const carregarCidades = async (uf) => {
+  if (!uf) return [];
 
+  // 1️⃣ Verifica no localStorage primeiro
+  const cidadesSalvas = localStorage.getItem(`cidades-${uf}`);
+  if (cidadesSalvas) {
+    return JSON.parse(cidadesSalvas);
+  }
+
+  // 2️⃣ Caso não tenha no localStorage, busca na API
+  try {
+    const response = await fetch(`https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`);
+    const data = await response.json();
+    const cityNames = data.map((cidade) => cidade.nome);
+
+    // 3️⃣ Armazena no localStorage
+    localStorage.setItem(`cidades-${uf}`, JSON.stringify(cityNames));
+
+    return cityNames;
+  } catch (error) {
+    console.error(`Erro ao carregar cidades para ${uf}:`, error);
+    return [];
+  }
+};
   // Função de validação local
   const validarCampos = () => {
     let novosErros: { [key: string]: string } = {};
@@ -253,7 +278,6 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
           onChange={(e) => atualizarDadosEmpresa('bairro', e.target.value)}
           fullWidth
           required
-          disabled={camposDesabilitados}
           error={!!erros.bairro}
           helperText={erros.bairro}
         />
@@ -263,7 +287,6 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
           onChange={(e) => atualizarDadosEmpresa('rua', e.target.value)}
           fullWidth
           required
-          disabled={camposDesabilitados}
           error={!!erros.rua}
           helperText={erros.rua}
         />
