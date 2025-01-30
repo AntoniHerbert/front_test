@@ -30,13 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <DadosEmpresaProvider>
-      <SegmentosProvider>
-      <CategoriasProvider>
         {children}
-        </CategoriasProvider>
-        </SegmentosProvider>
-        </DadosEmpresaProvider>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@
 import { Autocomplete, Box, Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 
-import DadosEmpresa from "../../components/Cadastro"
+import DadosEmpresa from "../../components/EnterpriseRegister.tsx"
 
 import StepContext from '@mui/material/Step';
 
@@ -14,25 +14,19 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import HorizontalNonLinearStepper from '@/components/Stepper';
-import Categorias from '@/components/Categorias';
-import Segmentos from '@/components/Segmentos';
+import Categorias from '../../components/CategorySelection.tsx';
+import Segmentos from '../../components/SegmentsSelection.tsx';
 import { Segment } from '@mui/icons-material';
 import StepperControls from '../../components/StepperControl';
-import { CategoriasProvider, useCategorias } from '@/contexts/CategoriasContext';
-import { SegmentosProvider, useSegmentos } from '@/contexts/SegmentosContext';
-import { DadosEmpresaProvider, useDadosEmpresa } from '@/contexts/DadosEmpresaContext';
 import { CidadesProvider } from '@/contexts/CidadesContext';
 
 
 const Cadastro: React.FC = () => {
-const {validarDadosEmpresa, camposComErro} = useDadosEmpresa();
-const {validarSegmentos} = useSegmentos();
-const {validarCategorias} = useCategorias();
 
 
   const steps = [
@@ -40,35 +34,55 @@ const {validarCategorias} = useCategorias();
     '2. Segmentos ',
     '3. Categorias',
   ];
+const [erros, setErros] = useState<any>({});
+  const [activeStep, setActiveStep] = useState(0);
+  const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+const [isValid, setIsValid] = useState(false);
+ {/* const fetchCategories = async () => {
+    try {
+      const response = await fetch("api/category");
 
-const [activeStep, setActiveStep] = useState(0);
-const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
-const [errors, setErrors] = useState<{ [key: string]: string }>({});
+      if (!response.ok) {
+        throw new Error("Erro ao buscar categorias");
+      }
 
+      const data: Category[] = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+      setCategories([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+*/}
 const isLastStep = activeStep === steps.length - 1;
 
 const [refresh, setRefresh] = useState(false);
 
+  const segmentosRef = useRef<any>(null);
+const categoriasRef = useRef<any>(null);
+ const dadosEmpresaRef = useRef<any>(null);
 
- 
 const handleNext = () => {
   // Step 1: Validação de Dados da Empresa
-  if (activeStep === 0) {
-
-const camposInvalidos =   validarDadosEmpresa(); // Pegando os campos com erro
-
- 
-    if (camposInvalidos.length > 0) {
-  
-      return;  // Não avança para o próximo passo
+if (activeStep === 0) {
+      const isValid = dadosEmpresaRef.current.validarDados(); 
+      console.log(isValid);// Chama a função de validação
+      if (!isValid) {
+        return;
+      }
     }
-  }
 
   // Step 2: Validação de Segmentos
   if (activeStep === 1) {
-    if (!validarSegmentos()) {
+    if (segmentosRef.current && !segmentosRef.current.validarSegmentos()) {
       alert('Por favor, selecione pelo menos um segmento.');
       return;
     }
@@ -76,7 +90,7 @@ const camposInvalidos =   validarDadosEmpresa(); // Pegando os campos com erro
 
   // Step 3: Validação de Categorias
   if (activeStep === 2) {
-    if (!validarCategorias()) {
+    if (categoriasRef.current && !categoriasRef.current.validarCategorias()) {
       alert('Por favor, selecione pelo menos uma categoria.');
       return;
     }
@@ -107,9 +121,9 @@ const handleBack=()=>{
       
           <CidadesProvider>
         <div style={{ marginTop: '20px' }}>
-        {activeStep === 0 && <DadosEmpresa></DadosEmpresa>}
-        {activeStep === 1 && <Segmentos></Segmentos>}
-        {activeStep === 2 && <Categorias></Categorias>}
+        {activeStep === 0 && <DadosEmpresa setIsValid={setIsValid} ref={dadosEmpresaRef} />}
+        {activeStep === 1 && <Segmentos ref={segmentosRef}></Segmentos>}
+        {activeStep === 2 && <Categorias ref={categoriasRef} categoriesData={categories}/>}
       </div>
       </CidadesProvider>
           <div className="flex gap-4 items-center flex-col  w-500 h-100 col-start-1 row-start-6 col-span-3">
