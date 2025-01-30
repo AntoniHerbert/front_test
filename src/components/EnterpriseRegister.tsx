@@ -2,7 +2,7 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { TextField, Autocomplete, FormControl, Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
-
+import { PatternFormat } from "react-number-format";
 const estados = ['SP', 'RJ', 'MG', 'RS', 'SC', 'PR', 'BA', 'PE', 'CE'];
 const areasEmpresa = ['Restaurante'];
 
@@ -192,15 +192,18 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
         <Typography variant="h1" color="#ffffff" className="text-foreground items text-center text-4xl col-start-1 row-start-1 col-span-3">
           Cadastro da Empresa
         </Typography>
-        <TextField
-          label="CNPJ"
-          value={dadosEmpresa.cnpj}
-          onChange={(e) => atualizarDadosEmpresa('cnpj', e.target.value)}
-          fullWidth
-          required
-          error={!!erros.cnpj}
-          helperText={erros.cnpj}
-        />
+        <PatternFormat
+  customInput={TextField}
+  format="##.###.###/####-##"
+  mask="_"
+  label="CNPJ"
+  value={dadosEmpresa.cnpj}
+  onValueChange={(values) => atualizarDadosEmpresa("cnpj", values.value)}
+  fullWidth
+  required
+  error={!!erros.cnpj}
+  helperText={erros.cnpj}
+/>
         <TextField
           label="Razão Social"
           value={dadosEmpresa.razaoSocial}
@@ -219,16 +222,19 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
           error={!!erros.nome}
           helperText={erros.nome}
         />
-        <TextField
-          label="CEP"
-          value={dadosEmpresa.cep}
-          onChange={(e) => atualizarDadosEmpresa('cep', e.target.value)}
-          onBlur={() => buscarEnderecoPorCep(dadosEmpresa.cep)}
-          fullWidth
-          required
-          error={!!erros.cep}
-          helperText={erros.cep}
-        />
+        <PatternFormat
+  customInput={TextField}
+  format="#####-###"
+  mask="_"
+  label="CEP"
+  value={dadosEmpresa.cep}
+  onValueChange={(values) => atualizarDadosEmpresa("cep", values.value)}
+  onBlur={() => buscarEnderecoPorCep(dadosEmpresa.cep)}
+  fullWidth
+  required
+  error={!!erros.cep}
+  helperText={erros.cep}
+/>
         <Autocomplete
           options={estados}
           value={dadosEmpresa.estado}
@@ -279,15 +285,18 @@ const DadosEmpresa = forwardRef(({ setIsValid }: { setIsValid: (valid: boolean) 
           error={!!erros.email}
           helperText={erros.email}
         />
-        <TextField
-          label="Telefone"
-          value={dadosEmpresa.telefone}
-          onChange={(e) => atualizarDadosEmpresa('telefone', e.target.value)}
-          fullWidth
-          required
-          error={!!erros.telefone}
-          helperText={erros.telefone}
-        />
+        <PatternFormat
+  customInput={TextField}
+  format="(##) #####-####"
+  mask="_"
+  label="Telefone"
+  value={dadosEmpresa.telefone}
+  onValueChange={(values) => atualizarDadosEmpresa("telefone", values.value)}
+  fullWidth
+  required
+  error={!!erros.telefone}
+  helperText={erros.telefone}
+/>
         <Autocomplete
           options={areasEmpresa}
           value={dadosEmpresa.area}
